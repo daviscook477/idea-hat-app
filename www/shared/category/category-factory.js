@@ -2,7 +2,7 @@ angular.module('idea-hat.shared.category-factory',
   ['firebase', 'idea-hat.shared.f', 'idea-hat.shared.idea-factory'])
 
 .factory("Category", ["$FirebaseObject", "$firebase", "$f", "Idea",
-  function($FirebaseObject, $firebase, $f, Ideas) {
+  function($FirebaseObject, $firebase, $f, Idea) {
   // create a new factory based on $FirebaseObject
   var CategoryFactory = $FirebaseObject.$extendFactory({
     // TODO: understand how this works
@@ -10,6 +10,7 @@ angular.module('idea-hat.shared.category-factory',
       var self = snapshot.val(); // obtain the data that represents this idea
       self.ideasD = {};
       for (param in self.ideas) {
+        console.log(param);
         self.ideasD[param] = Idea(param); // obtain each idea
       }
       // set the properties of self into this
@@ -24,7 +25,7 @@ angular.module('idea-hat.shared.category-factory',
     // obtain a reference to the firebase at this idea
     var ref = $f.ref().child('categories').child(id);
     // override the factory used by $firebase
-    var sync = $firebase(ref, { objectFactory: IdeaFactory });
+    var sync = $firebase(ref, { objectFactory: CategoryFactory });
     // this have been created with the IdeaFactory
     return sync.$asObject();
   }

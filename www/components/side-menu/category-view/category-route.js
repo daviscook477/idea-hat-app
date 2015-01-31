@@ -1,4 +1,4 @@
-angular.module('idea-hat.ideas.router', [])
+angular.module('idea-hat.category.router', [])
 
 .config(['$stateProvider', function($stateProvider, $urlRouterProvider) {
   $stateProvider

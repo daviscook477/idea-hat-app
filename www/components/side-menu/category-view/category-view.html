@@ -1,7 +1,7 @@
-<ion-view view-title="Browsing Ideas" ng-controller="IdeasCtrl">
+<ion-view view-title="Browsing Ideas" ng-controller="CategoryCtrl">
   <ion-content>
     <div class="list">
-      <div ng-repeat="idea in category.ideas">
+      <div ng-repeat="idea in category.ideasD">
         <idea-hat-idea idea="idea" ng-click="goIdea(idea)">
 
         </idea-hat-idea>
