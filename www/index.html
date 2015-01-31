@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
+
+    <!-- type definitions -->
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <title></title>
 
-
+    <!-- title -->
+    <title>Idea Hat</title>
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
@@ -13,35 +15,40 @@
 
     <!-- library dependencies -->
 
-    <!-- ionic -->
-    <script src="assets/lib/ionic/js/ionic.bundle.js"></script>
-    <link href="assets/lib/ionic/css/ionic.css" rel="stylesheet">
+      <!-- ionic -->
+      <script src="assets/lib/ionic/js/ionic.bundle.js"></script>
+      <link href="assets/lib/ionic/css/ionic.css" rel="stylesheet">
 
-    <!-- firebase + angularfire -->
-    <script src="assets/lib/firebase/firebase.js"></script>
-    <script src="assets/lib/angularfire/dist/angularfire.js"></script>
+      <!-- firebase + angularfire -->
+      <script src="assets/lib/firebase/firebase.js"></script>
+      <script src="assets/lib/angularfire/dist/angularfire.js"></script>
 
-    <!-- cordova -->
-    <script src="cordova.js"></script>
+      <!-- cordova -->
+      <script src="cordova.js"></script>
 
-    <!-- base fiiles -->
-    <script src="app.js"></script>
-    <script src="app-controller.js"></script>
-    <link href="app.css" rel="stylesheet">
+    <!-- base files -->
+      <script src="app.js"></script>
+      <script src="app-controller.js"></script>
+      <link href="app.css" rel="stylesheet">
 
-    <!-- add files for individual components here -->
+    <!-- individual components here -->
 
-    <!-- ideas component -->
-    <script src="components/side-menu/ideas-view/ideas-module.js"></script>
-    <script src="components/side-menu/ideas-view/ideas-ctrl.js"></script>
-    <script src="components/side-menu/ideas-view/ideas-route.js"></script>
+      <!-- ideas component -->
+      <script src="components/side-menu/ideas-view/ideas-module.js"></script>
+      <script src="components/side-menu/ideas-view/ideas-ctrl.js"></script>
+      <script src="components/side-menu/ideas-view/ideas-route.js"></script>
 
     <!-- shared components -->
 
-    <!-- idea directive -->
-    <script src="shared/idea-directive/idea-directive.js"></script>
+      <!-- idea -->
+      <script src="shared/idea/idea-directive.js"></script>
+      <script src="shared/idea/idea-factory.js"></script>
+
+      <!-- f -->
+      <script src="shared/f/f-service.js"></script>
   </head>
 
+  <!-- the app -->
   <body ng-app="idea-hat">
     <ion-nav-view></ion-nav-view>
   </body>

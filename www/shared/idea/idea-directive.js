@@ -13,6 +13,6 @@ angular.module('idea-hat.shared.idea-directive', [])
     scope: {
       idea: '='
     }, // create a new isolate scope
-    templateUrl: 'shared/idea-directive/idea-directive.html' //this directive adds in this html in place of it
+    templateUrl: 'shared/idea/idea-directive.html' //this directive adds in this html in place of it
   };
 }]);
