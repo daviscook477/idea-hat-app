@@ -1,0 +1,11 @@
+<ion-view view-title="Browsing Ideas" ng-controller="IdeasCtrl">
+  <ion-content>
+    <div class="list">
+      <div ng-repeat="idea in category.ideas">
+        <idea-hat-idea idea="idea" ng-click="goIdea(idea)">
+
+        </idea-hat-idea>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
