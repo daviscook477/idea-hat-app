@@ -1,9 +1,11 @@
 angular.module('idea-hat.ideas.controller', ['idea-hat.shared.f', 'idea-hat.shared.idea-factory'])
 
 .controller('IdeasCtrl', ['$scope', '$state', '$f', 'Idea', function($scope, $state, $f, Idea) {
+  // initialize the $scope with an ideas object
+  $scope.ideas = {};
+
   // callback for when the ideas are updated
   var ideasCB = function(snapshot) {
-    $scope.ideas = {};
     var data = snapshot.val();
     for (param in data) { // find each idea, param is the key for the idea
       $scope.ideas[param] = Idea(param); // at each key in $scope.ideas put an idea created from that key
