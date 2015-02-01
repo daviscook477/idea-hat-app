@@ -7,7 +7,15 @@ angular.module('idea-hat.category.controller',
   '$f', 'Category', '$ionicModal', '$ionicPopup',
   function($scope, $state, $stateParams, $f, Category, $ionicModal, $ionicPopup) {
   // initialize the $scope with a category object
-  $scope.category = Category($stateParams.id, true, false); // we need to trace the ideas but we don't want to trace the user
+  $scope.category = Category($stateParams.id); // we need to trace the ideas but we don't want to trace the user
+  $scope.category.$loaded().then(function(category) { //when the idea loads tell it to
+    // load its ideas
+    category.loadIdeas().on("idea", function(idea) { // set a callback for each idea
+      idea.loadUser(); // make each idea load its user
+    });
+    // load its users
+    category.loadUser();
+  });
 
   // intialize the input containers to empty
   $scope.resetInput = function() {

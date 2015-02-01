@@ -1,56 +1,104 @@
 angular.module('idea-hat.shared.category-factory',
   ['firebase', 'idea-hat.shared.f', 'idea-hat.shared.idea-factory'])
 
-.factory("Category", ["$FirebaseObject", "$firebase", "$f", "Idea",
-  function($FirebaseObject, $firebase, $f, Idea) {
-  var getFactory = function(traceIdeas, traceOwner) { // method for obtaining a different factory based on if the ideas or the owner should be traced
-    // create a new factory based on $FirebaseObject
-    var CategoryFactory = $FirebaseObject.$extendFactory({
-      // TODO: understand how this works
-      $$updated: function(snapshot) {
-        var self = snapshot.val(); // obtain the data that represents this idea
-        if (traceIdeas) { // only trace the ideas if told to
-          self.ideasD = {};
-          for (param in self.ideas) {
-            self.ideasD[param] = Idea(param); // obtain each idea
-          }
-        }
-        if (traceOwner) { // only trace the owner if told to
-          if (self.owner == null) { // null or undefined
-            self.ownerD = {
-              screenName: "anonymous"
-            };
-          } else {
-            self.ownerD = User(self.owner); // set this idea's author to be a User created with this idea's owner
-          }
-        }
-        // set the properties of self into this
-        for (param in self) {
-          this[param] = self[param];
-        }
-        return true;
-      },
-      postIdea: function(idea) { // this method posts an idea to this category
-        var key = $f.ref().child("ideas").push(idea).key();
-        // put this idea in the category in the firebase
-        $f.ref().child("categories").child(this.$id).child("ideas").child(key).set("true");
+.factory("Category", ["$FirebaseObject", "$firebase", "$f", "IdeaList", "User",
+  function($FirebaseObject, $firebase, $f, IdeaList, User) {
+  // create a new factory based on $FirebaseObject
+  var CategoryFactory = $FirebaseObject.$extendFactory({
+    // TODO: understand how this works
+    $$updated: function(snapshot) {
+      var self = snapshot.val(); // obtain the data that represents this idea
+
+      // set the properties of self into this
+      for (param in self) {
+        this[param] = self[param];
       }
-    });
-    return CategoryFactory;
-  };
-  return function(id, traceIdeas, traceOwner) {
-    // if the trace arguments are not passed, do not trace
-    if (traceIdeas == null) {
-      traceIdeas = false;
+      return true;
+    },
+    loadUser: function() {
+      if (this.userD == null) {
+        this.userD = User(this.$id);
+      }
+      return this.userD;
+    },
+    postIdea: function(idea) { // this method posts an idea to this category
+      this.loadIdeas().$loaded().then(function(list) {
+        list.$add(idea).then(function(ideaRef) {
+          var key = ideaRef.key(); // add the idea to the category
+          mainRef.child("categories").child(this.$id).child("ideas").child(key).set("true");
+        });
+      });
+    },
+    // this method tells the idea to load its ideas / provides the caller with the ideas
+    loadIdeas: function(snapshot) {
+      if (this.ideasD == null) {
+        this.ideasD = IdeaList(this.$id);
+      }
+      return this.ideasD;
+    },
+    // this method doesn't really need to be here (it just does the default behavior)
+    $$updated:function(snapshot) {
+      // well it actually may need to preserve the values of commentsD and userD
+      var self = snapshot.val();
+      self.ideasD = this.ideasD;
+      self.userD = this.userD;
+      // set the properties of self into this
+      for (param in self) {
+        this[param] = self[param];
+      }
+      return true;
     }
-    if (traceOwner == null) {
-      traceOwner = false;
-    }
+  });
+  return function(id) {
     // obtain a reference to the firebase at this idea
     var ref = $f.ref().child('categories').child(id);
     // override the factory used by $firebase
-    var sync = $firebase(ref, { objectFactory: getFactory(traceIdeas, traceOwner) });
+    var sync = $firebase(ref, { objectFactory: CategoryFactory });
     // this have been created with the IdeaFactory
     return sync.$asObject();
+  }
+}])
+// factory (object) that is a list of ideas associated with an category
+.factory("IdeaList",
+  ["$FirebaseArray", "$firebase", "$f", "Idea",
+  function($FirebaseArray, $firebase, $f, Idea) {
+  // create a new factory based on $FirebaseObject
+  var mainRef = $f.ref();
+  var IdeaListFactory = $FirebaseArray.$extendFactory({
+    $$added: function(snapshot) {
+      var idea = Idea(snapshot.key());
+      if (this.CBS != null) {
+        for (var i = 0; i < this.CBS.length; i++) {
+          if (this.CBS[i].type === "idea") {
+            this.CBS[i].CB(idea);
+          }
+        }
+      }
+      return idea;
+    },
+    $$updated: function(snapshot) {
+      var record = this.$getRecord(snapshot.key());
+      var idea = Idea(snapshot.key());
+      if (this.CBS != null) {
+        for (var i = 0; i < this.CBS.length; i++) {
+          if (this.CBS[i].type === "idea") {
+            this.CBS[i].CB(comment);
+          }
+        }
+      }
+      record = idea;
+      return true;
+    },
+    on: function(type, CB) {
+      if (this.CBS == null) {
+        this.CBS = [];
+      }
+      this.CBS.push({type: type, CB: CB});
+    }
+  });
+  return function(id) {
+    var ref = mainRef.child('categories').child(id).child("ideas");
+    var sync = $firebase(ref, { arrayFactory: IdeaListFactory });
+    return sync.$asArray();
   }
 }]);

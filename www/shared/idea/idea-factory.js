@@ -80,7 +80,6 @@ angular.module('idea-hat.shared.idea-factory',
       if (this.CBS != null) {
         for (var i = 0; i < this.CBS.length; i++) { // notify the callbacks
           if (this.CBS[i].type === "comment") {
-            console.log("notify");
             this.CBS[i].CB(comment);
           }
         }
@@ -89,7 +88,6 @@ angular.module('idea-hat.shared.idea-factory',
       return true;
     },
     on: function(type, CB) { // allow for listening to changes
-      console.log("called");
       if (this.CBS == null) {
         this.CBS = [];
       }
