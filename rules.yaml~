@@ -1,0 +1,21 @@
+functions:
+  - isLoggedIn(): auth.uid !== null
+
+schema:
+  definitions:
+    idea:
+      type: object
+      additionalProperties: false
+      properties:
+        title:  {type: string}
+        description: {type: string}
+        owner: {}
+
+access:
+  - location: "ideas"
+      schema:
+        type: object
+
+  - location: /
+    read:  true
+    write: true && isLoggedIn()
