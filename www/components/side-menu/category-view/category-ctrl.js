@@ -7,7 +7,7 @@ angular.module('idea-hat.category.controller',
   '$f', 'Category', '$ionicModal', '$ionicPopup',
   function($scope, $state, $stateParams, $f, Category, $ionicModal, $ionicPopup) {
   // initialize the $scope with a category object
-  $scope.category = Category($stateParams.id);
+  $scope.category = Category($stateParams.id, true, false); // we need to trace the ideas but we don't want to trace the user
 
   // intialize the input containers to empty
   $scope.resetInput = function() {

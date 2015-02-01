@@ -3,7 +3,8 @@ angular.module('idea-hat',
   'idea-hat.controller',
   'idea-hat.ideas',
   'idea-hat.category',
-  'idea-hat.categories'])
+  'idea-hat.categories',
+  'idea-hat.idea'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {

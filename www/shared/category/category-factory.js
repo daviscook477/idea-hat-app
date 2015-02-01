@@ -39,12 +39,12 @@ angular.module('idea-hat.shared.category-factory',
     return CategoryFactory;
   };
   return function(id, traceIdeas, traceOwner) {
-    // if the trace arguments are not passed, trace by default
+    // if the trace arguments are not passed, do not trace
     if (traceIdeas == null) {
-      traceIdeas = true;
+      traceIdeas = false;
     }
     if (traceOwner == null) {
-      traceOwner = true;
+      traceOwner = false;
     }
     // obtain a reference to the firebase at this idea
     var ref = $f.ref().child('categories').child(id);
