@@ -1,11 +1,23 @@
 <ion-view view-title="Account Management" ng-controller="AccountCtrl">
   <ion-content>
     <!-- not logged in -->
-    <div ng-show="user == null" class="button button-block button-royal">Login</div>
-    <div ng-show="user == null" class="button button-block button-royal">Sign up</div>
+    <div ng-show="user == null"
+      class="button button-block button-royal"
+      ng-click="showLoginModal()">
+      Login
+    </div>
+    <div ng-show="user == null"
+      class="button button-block button-royal"
+      ng-click="showSignupModal()">
+      Sign up
+    </div>
 
     <!-- logged in -->
-    <div ng-show="user != null" class="button button-block button-assertive">Log out</div>
+    <div ng-show="user != null"
+      class="button button-block button-assertive"
+      ng-click="doLogout()">
+      Log out
+    </div>
 
     <!-- either way display device settings -->
     <div class="list">
