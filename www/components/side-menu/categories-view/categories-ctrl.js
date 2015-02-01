@@ -8,9 +8,12 @@ angular.module('idea-hat.categories.controller',
   $scope.categories = {};
 
   // intialize the input containers to empty
-  $scope.input = {
-    title: null,
+  $scope.resetInput = function() {
+    $scope.input = {
+      title: null
+    };
   };
+  $scope.resetInput();
 
   // callback for when the ideas are updated
   var categoriesCB = function(snapshot) {
@@ -55,6 +58,7 @@ angular.module('idea-hat.categories.controller',
       };
       $f.ref().child("categories").push(category); // push the category to the firebase
       $scope.hideCategoryModal(); // hide the modal-it's purpose is done
+      $scope.resetInput();
     } else {
       // popup with error
       $ionicPopup.alert({title: inputError});

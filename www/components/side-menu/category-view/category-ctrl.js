@@ -10,10 +10,13 @@ angular.module('idea-hat.category.controller',
   $scope.category = Category($stateParams.id);
 
   // intialize the input containers to empty
-  $scope.input = {
-    title: null,
-    description: null
+  $scope.resetInput = function() {
+    $scope.input = {
+      title: null,
+      description: null
+    };
   };
+  $scope.resetInput();
 
   // create the modal for posting ideas
   $ionicModal.fromTemplateUrl('components/side-menu/shared/idea-post-modal.html', {
@@ -51,6 +54,7 @@ angular.module('idea-hat.category.controller',
       };
       $scope.category.postIdea(idea); // post the idea to the firebase
       $scope.hideIdeaModal(); // hide the modal-it's purpose is done
+      $scope.resetInput();
     } else {
       // popup with error
       $ionicPopup.alert({title: inputError});
