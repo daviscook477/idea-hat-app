@@ -1,58 +1,107 @@
 angular.module('idea-hat.shared.idea-factory',
-  ['firebase', 'idea-hat.shared.f', 'idea-hat.shared.user-factory', 'idea-hat.shared.comment-factory'])
+  ['firebase',
+  'idea-hat.shared.f',
+  'idea-hat.shared.user-factory',
+  'idea-hat.shared.comment-factory'])
 
-.factory("Idea", ["$FirebaseObject", "$firebase", "$f", "User", "Comment",
-  function($FirebaseObject, $firebase, $f, User, Comment) {
-  var getFactory = function(traceComments, traceOwner, traceCommentsOwner) {
-    // create a new factory based on $FirebaseObject
-    var IdeaFactory = $FirebaseObject.$extendFactory({
-      // TODO: understand how this works
-      $$updated: function(snapshot) {
-        var self = snapshot.val(); // obtain the data that represents this idea
-        if (traceComments) {
-          self.commentsD = {};
-          for (param in self.comments) {
-            self.commentsD[param] = Comment(param, traceCommentsOwner); // obtain each idea
-          }
-        }
-        if (traceOwner) {
-          if (self.owner == null) { // null or undefined
-            self.ownerD = {
-              screenName: "anonymous"
-            };
-          } else {
-            self.ownerD = User(self.owner); // set this idea's author to be a User created with this idea's owner
-          }
-        }
-        // set the properties of self into this
-        for (param in self) {
-          this[param] = self[param];
-        }
-        return true;
-      },
-      postComment: function(comment) { // this method posts a comment to this idea
-        var key = $f.ref().child("comments").push(comment).key();
-        // put this comment in the idea on the firebase
-        $f.ref().child("ideas").child(this.$id).child("comments").child(key).set("true");
+.factory("Idea", ["$FirebaseObject", "$firebase", "$f", "User", "CommentList",
+  function($FirebaseObject, $firebase, $f, User, CommentList) {
+  // create a new factory based on $FirebaseObject
+  var mainRef = $f.ref();
+  var IdeaFactory = $FirebaseObject.$extendFactory({
+    // this method tells the idea to load its user
+    loadUser: function() {
+      if (this.userD == null) {
+        this.userD = User(this.$id);
       }
-    });
-    return IdeaFactory;
-  }
-  return function(id, traceComments, traceOwner, traceCommentsOwner) {
-    if (traceComments == null) {
-      traceComments = false;
+      return this.userD;
+    },
+    postComment: function(comment) { // this method posts a comment to this idea
+      this.loadComments().$loaded().then(function(list) {
+        list.$add(comment).then(function(commentRef) {
+          var key = commentRef.key(); // add the comment to its idea
+          mainRef.child("ideas").child(this.$id).child("comments").child(key).set("true");
+        });
+      });
+    },
+    // this method tells the idea to load its comments / provides the caller with the comments
+    loadComments: function(snapshot) {
+      if (this.commentsD == null) {
+        this.commentsD = CommentList(this.$id);
+      }
+      return this.commentsD;
+    },
+    // this method doesn't really need to be here (it just does the default behavior)
+    $$updated:function(snapshot) {
+      // well it actually may need to preserve the values of commentsD and userD
+      var self = snapshot.val();
+      self.commentsD = this.commentsD;
+      self.userD = this.userD;
+      // set the properties of self into this
+      for (param in self) {
+        this[param] = self[param];
+      }
+      return true;
     }
-    if (traceOwner == null) {
-      traceOwner = false;
-    }
-    if (traceCommentsOwner == null) {
-      traceCommentsOwner = false;
-    }
+  });
+  return function(id) {
     // obtain a reference to the firebase at this idea
-    var ref = $f.ref().child('ideas').child(id);
+    var ref = mainRef.child('ideas').child(id);
     // override the factory used by $firebase
-    var sync = $firebase(ref, { objectFactory: getFactory(traceComments, traceOwner, traceCommentsOwner) });
+    var sync = $firebase(ref, { objectFactory: IdeaFactory });
     // this have been created with the IdeaFactory
     return sync.$asObject();
+  }
+}])
+
+// factory (object) that is a list of comments associated with an idea
+.factory("CommentList",
+  ["$FirebaseArray", "$firebase", "$f", "Comment",
+  function($FirebaseArray, $firebase, $f, Comment) {
+  // create a new factory based on $FirebaseObject
+  var mainRef = $f.ref();
+  // so this here creates an array of comments that updates with changes to the ideas comments
+  var CommentListFactory = $FirebaseArray.$extendFactory({
+    // overide the $$added and $$updated methods such that they return comment objects instead of what would normally be in the snapshot
+    $$added: function(snapshot) {
+      var comment = Comment(snapshot.key());  // create a comment from the idea that this array is on
+      if (this.CBS != null) {
+        for (var i = 0; i < this.CBS.length; i++) { // notify the callbacks
+          if (this.CBS[i].type === "comment") {
+            this.CBS[i].CB(comment);
+          }
+        }
+      }
+      return comment;
+    },
+    $$updated: function(snapshot) {
+      var record = this.$getRecord(snapshot.key()); // destroy the comment that was there before
+      var comment = Comment(snapshot.key());  // create a comment from the idea that this array is on
+      if (this.CBS != null) {
+        for (var i = 0; i < this.CBS.length; i++) { // notify the callbacks
+          if (this.CBS[i].type === "comment") {
+            console.log("notify");
+            this.CBS[i].CB(comment);
+          }
+        }
+      }
+      record = comment; // set this record to be a new comment from the snapshot
+      return true;
+    },
+    on: function(type, CB) { // allow for listening to changes
+      console.log("called");
+      if (this.CBS == null) {
+        this.CBS = [];
+      }
+      this.CBS.push({type: type, CB: CB}); // add this to the callbacks
+    }
+  });
+  return function(id) {
+    // obtain a reference to the firebase at this comment
+    var ref = mainRef.child('ideas').child(id).child("comments");
+    // override the factory used by $firebase
+    var sync = $firebase(ref, { arrayFactory: CommentListFactory });
+    // this have been created with the CommentFactory
+    return sync.$asArray();
   }
 }]);

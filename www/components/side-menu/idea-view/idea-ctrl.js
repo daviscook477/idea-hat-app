@@ -6,7 +6,19 @@ angular.module('idea-hat.idea.controller',
   ['$scope', '$state', '$stateParams', '$f', 'Idea', '$ionicPopup', '$ionicModal',
   function($scope, $state, $stateParams, $f, Idea, $ionicPopup, $ionicModal) {
   // initialize the $scope with the idea
-  $scope.idea = Idea($stateParams.id, true, true, true);
+  $scope.idea = Idea($stateParams.id);
+  $scope.idea.$loaded().then(function(idea) { //when the idea loads tell it to
+    // load its comments
+    idea.loadComments().on("comment", function(comment) { // set a callback for each comment
+      for (param in comment) {
+        console.log(param + " - " + comment[param]);
+      }
+      console.log("recieved comment loaded: " + comment);
+      comment.loadUser(); // make each comment load its user
+    });
+    // load its users
+    idea.loadUser();
+  });
 
   // intialize the input containers to empty
   $scope.resetInput = function() {

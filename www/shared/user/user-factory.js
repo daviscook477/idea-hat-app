@@ -5,7 +5,21 @@ angular.module('idea-hat.shared.user-factory',
   function($FirebaseObject, $firebase, $f) {
   // create a new factory based on $FirebaseObject
   var UserFactory = $FirebaseObject.$extendFactory({
-    // TODO: anything to do with an user
+    // TODO: check if the thing actually changes in $$updated
+    $$updated: function(snapshot) {
+      var self = snapshot.val();
+      if (self == null) {
+        self = {};
+      }
+      if (self.screenName == null) {
+        self.screenName = "anonymous";
+      }
+      // set the properties of self into this
+      for (param in self) {
+        this[param] = self[param];
+      }
+      return true;
+    }
   });
 
   return function(id) {
