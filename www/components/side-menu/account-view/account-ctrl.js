@@ -12,47 +12,36 @@ angular.module('idea-hat.account.controller',
   // intialize the input containers to empty
   $scope.resetInput = function() {
     $scope.input = {
-      text: null
+      login: {
+        email: null,
+        password: null
+      },
+      signup: {
+        email: null,
+        password: null
+      }
     };
   };
   $scope.resetInput();
+  $scope.modal = {
+    login: null,
+    signup: null
+  };
 
-  // create the modal for posting ideas
-  $ionicModal.fromTemplateUrl('components/side-menu/shared/comment-post-modal.html', {
+  // create the modal for login
+  $ionicModal.fromTemplateUrl('components/side-menu/shared/login-modal.html', {
     scope: $scope,
     animation: 'slide-in-up',
     focusFirstInput: true
   }).then(function(modal) {
-    $scope.modal = modal;
+    $scope.modal.login = modal;
   });
-
-  // functions for manipulating the modal
-  $scope.hideCommentModal = function() {
-    $scope.modal.hide();
-  };
-  $scope.showCommentModal = function() {
-    $scope.modal.show();
-  };
-  $scope.postComment = function() {
-    // validate the input
-    var validInput = true;
-    var inputError = null;
-    if ($scope.input.text === null || $scope.input.text === "") {
-      validInput = false;
-      // set input error
-    }
-    if (validInput) {
-      // post the comment to the firebase
-      var comment = {
-        text: $scope.input.text,
-        owner: $f.authID()
-      };
-      $scope.idea.postComment(comment); // post the comment to the firebase
-      $scope.hideCommentModal(); // hide the modal-it's purpose is done
-      $scope.resetInput();
-    } else {
-      // popup with error
-      $ionicPopup.alert({title: inputError});
-    }
-  };
+  // create the modal for signup
+  $ionicModal.fromTemplateUrl('components/side-menu/shared/signup-modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up',
+    focusFirstInput: true
+  }).then(function(modal) {
+    $scope.modal.signup = modal;
+  });
 }]);

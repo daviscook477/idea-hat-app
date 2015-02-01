@@ -1,5 +1,20 @@
 <ion-view view-title="Account Management" ng-controller="AccountCtrl">
   <ion-content>
-    
+    <!-- not logged in -->
+    <div ng-show="user == null" class="button button-block button-royal">Login</div>
+    <div ng-show="user == null" class="button button-block button-royal">Sign up</div>
+
+    <!-- logged in -->
+    <div ng-show="user != null" class="button button-block button-assertive">Log out</div>
+
+    <!-- either way display device settings -->
+    <div class="list">
+      <!-- TODO: device settings -->
+    </div>
+
+    <!-- if logged in show the account settings -->
+    <div ng-show="user != null">
+      <div class="item">Screen name: {{user.screenName}}</div> <!-- TODO: add a button for changing it -->
+    </div>
   </ion-content>
 </ion-view>
