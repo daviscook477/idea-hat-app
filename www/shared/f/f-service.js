@@ -1,4 +1,5 @@
-angular.module('idea-hat.shared.f', [])
+angular.module('idea-hat.shared.f',
+  [])
 
 .factory('$f', [function() {
   var main = new Firebase("https://idea0.firebaseio.com");

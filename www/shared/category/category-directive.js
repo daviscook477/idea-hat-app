@@ -13,6 +13,6 @@ angular.module('idea-hat.shared.category-directive', [])
     scope: {
       category: '='
     }, // create a new isolate scope
-    templateUrl: 'shared/category-directive/category-directive.html' //this directive adds in this html in place of it
+    templateUrl: 'shared/category/category-directive.html' //this directive adds in this html in place of it
   };
 }]);

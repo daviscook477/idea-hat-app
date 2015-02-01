@@ -1,6 +1,6 @@
 angular.module('idea-hat.category.router', [])
 
-.config(['$stateProvider', function($stateProvider, $urlRouterProvider) {
+.config(['$stateProvider', function($stateProvider) {
   $stateProvider
 
   .state('app.category', {

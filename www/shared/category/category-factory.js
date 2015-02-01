@@ -10,7 +10,6 @@ angular.module('idea-hat.shared.category-factory',
       var self = snapshot.val(); // obtain the data that represents this idea
       self.ideasD = {};
       for (param in self.ideas) {
-        console.log(param);
         self.ideasD[param] = Idea(param); // obtain each idea
       }
       // set the properties of self into this

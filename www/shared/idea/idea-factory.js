@@ -8,17 +8,19 @@ angular.module('idea-hat.shared.idea-factory',
     // TODO: understand how this works
     $$updated: function(snapshot) {
       var self = snapshot.val(); // obtain the data that represents this idea
-      self.ownerD = User(self.owner); // set this idea's author to be a User created with this idea's owner
+      if (self.owner == null) { // null or undefined
+        self.ownerD = {
+          screenName: "anonymous"
+        };
+      } else {
+        self.ownerD = User(self.owner); // set this idea's author to be a User created with this idea's owner
+      }
       // set the properties of self into this
       for (param in self) {
         this[param] = self[param];
       }
       return true;
     },
-    // the author of the idea. this gets override when the $$added method fires
-    ownerD: function() {
-      return User(this.owner).$loaded();
-    }
   });
 
   return function(id) {

@@ -1,0 +1,11 @@
+<ion-view view-title="Browsing Categories" ng-controller="CategoriesCtrl">
+  <ion-content>
+    <div class="list">
+      <div ng-repeat="category in categories">
+        <idea-hat-category category="category" ng-click="goCategory(category)">
+
+        </idea-hat-category>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

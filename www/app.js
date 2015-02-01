@@ -1,4 +1,5 @@
-angular.module('idea-hat', ['ionic', 'idea-hat.controller', 'idea-hat.ideas', 'idea-hat.category'])
+angular.module('idea-hat',
+  ['ionic', 'idea-hat.controller', 'idea-hat.ideas', 'idea-hat.category', 'idea-hat.categories'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
