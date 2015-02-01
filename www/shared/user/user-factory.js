@@ -23,6 +23,9 @@ angular.module('idea-hat.shared.user-factory',
   });
 
   return function(id) {
+    if (id === null) {
+      return null;
+    }
     // obtain a reference to the firebase at this user
     var ref = $f.ref().child('users').child(id);
     // override the factory used by $firebase

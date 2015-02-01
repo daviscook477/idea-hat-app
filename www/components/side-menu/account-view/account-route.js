@@ -1,13 +1,13 @@
-angular.module('idea-hat.idea.router', [])
+angular.module('idea-hat.account.router', [])
 
 .config(['$stateProvider', function($stateProvider) {
   $stateProvider
 
-  .state('app.idea', {
-    url: '/idea:id',
+  .state('app.account', {
+    url: '/account',
     views: {
       'menuContent': {
-        templateUrl: 'components/side-menu/idea-view/idea-view.html'
+        templateUrl: 'components/side-menu/account-view/account-view.html'
       }
     }
   })

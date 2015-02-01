@@ -4,7 +4,8 @@ angular.module('idea-hat',
   'idea-hat.ideas',
   'idea-hat.category',
   'idea-hat.categories',
-  'idea-hat.idea'])
+  'idea-hat.idea',
+  'idea-hat.account'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {

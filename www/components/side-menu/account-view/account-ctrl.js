@@ -1,20 +1,13 @@
-angular.module('idea-hat.idea.controller',
+angular.module('idea-hat.account.controller',
   ['idea-hat.shared.f',
-  'idea-hat.shared.idea-factory'])
+  'idea-hat.shared.user-factory',
+  'ionic'])
 
-.controller('IdeaCtrl',
-  ['$scope', '$state', '$stateParams', '$f', 'Idea', '$ionicPopup', '$ionicModal',
-  function($scope, $state, $stateParams, $f, Idea, $ionicPopup, $ionicModal) {
+.controller('AccountCtrl',
+  ['$scope', '$state', '$f', 'User', '$ionicPopup', '$ionicModal',
+  function($scope, $state, $f, User, $ionicPopup, $ionicModal) {
   // initialize the $scope with the idea
-  $scope.idea = Idea($stateParams.id);
-  $scope.idea.$loaded().then(function(idea) { //when the idea loads tell it to
-    // load its comments
-    idea.loadComments().on("comment", function(comment) { // set a callback for each comment
-      comment.loadUser(); // make each comment load its user
-    });
-    // load its users
-    idea.loadUser();
-  });
+  $scope.user = User($f.authID());
 
   // intialize the input containers to empty
   $scope.resetInput = function() {
