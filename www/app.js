@@ -1,5 +1,9 @@
 angular.module('idea-hat',
-  ['ionic', 'idea-hat.controller', 'idea-hat.ideas', 'idea-hat.category', 'idea-hat.categories'])
+  ['ionic',
+  'idea-hat.controller',
+  'idea-hat.ideas',
+  'idea-hat.category',
+  'idea-hat.categories'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -25,5 +29,5 @@ angular.module('idea-hat',
     controller: 'AppCtrl'
   })
 
-  $urlRouterProvider.otherwise('/app/ideas');
+  $urlRouterProvider.otherwise('/app/categories');
 });

@@ -19,7 +19,8 @@ angular.module('idea-hat.categories.controller',
   var categoriesCB = function(snapshot) {
     var data = snapshot.val();
     for (param in data) { // find each category, param is the key for that category
-      $scope.categories[param] = Category(param); // at each key in $scope.categories put an category created from that key
+      // each category object we create DOESN'T need to find the data at each of its ideas
+      $scope.categories[param] = Category(param, false, false); // at each key in $scope.categories put an category created from that key
     }
   };
 
