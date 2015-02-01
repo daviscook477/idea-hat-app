@@ -38,8 +38,7 @@ angular.module('idea-hat.category.controller',
     if ($scope.input.title === null || $scope.input.title === "") {
       validInput = false;
       // set input error
-    }
-    if ($scope.input.description === null || $scope.input.description === "") {
+    } else if ($scope.input.description === null || $scope.input.description === "") {
       validInput = false;
       // set input error
     }
