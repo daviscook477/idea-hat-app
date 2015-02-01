@@ -17,12 +17,9 @@ angular.module('idea-hat.shared.idea-factory',
       return this.userD;
     },
     postComment: function(comment) { // this method posts a comment to this idea
-      this.loadComments().$loaded().then(function(list) {
-        list.$add(comment).then(function(commentRef) {
-          var key = commentRef.key(); // add the comment to its idea
-          mainRef.child("ideas").child(this.$id).child("comments").child(key).set("true");
-        });
-      });
+      var commentRef = mainRef.child("comments").push(comment)
+      var key = commentRef.key(); // add the idea to the category
+      mainRef.child("ideas").child(this.$id).child("comments").child(key).set("true");
     },
     // this method tells the idea to load its comments / provides the caller with the comments
     loadComments: function(snapshot) {

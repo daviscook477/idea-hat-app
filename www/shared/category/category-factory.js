@@ -3,6 +3,7 @@ angular.module('idea-hat.shared.category-factory',
 
 .factory("Category", ["$FirebaseObject", "$firebase", "$f", "IdeaList", "User",
   function($FirebaseObject, $firebase, $f, IdeaList, User) {
+  var mainRef = $f.ref();
   // create a new factory based on $FirebaseObject
   var CategoryFactory = $FirebaseObject.$extendFactory({
     // TODO: understand how this works
@@ -22,12 +23,9 @@ angular.module('idea-hat.shared.category-factory',
       return this.userD;
     },
     postIdea: function(idea) { // this method posts an idea to this category
-      this.loadIdeas().$loaded().then(function(list) {
-        list.$add(idea).then(function(ideaRef) {
-          var key = ideaRef.key(); // add the idea to the category
-          mainRef.child("categories").child(this.$id).child("ideas").child(key).set("true");
-        });
-      });
+      var ideaRef = mainRef.child("ideas").push(idea)
+      var key = ideaRef.key(); // add the idea to the category
+      mainRef.child("categories").child(this.$id).child("ideas").child(key).set("true");
     },
     // this method tells the idea to load its ideas / provides the caller with the ideas
     loadIdeas: function(snapshot) {
