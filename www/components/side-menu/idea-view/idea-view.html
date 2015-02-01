@@ -1,0 +1,17 @@
+<ion-view view-title="Browsing Comments" ng-controller="IdeaCtrl">
+  <ion-content>
+    <div class="list">
+      <div class="item item-divider">Idea</div>
+      <idea-hat-idea idea="idea">
+
+      </idea-hat-idea>
+      <div class="item item-divider">Comments</div>
+      <div ng-repeat="comment in idea.commentsD">
+        <idea-hat-comment comment="comment">
+
+        </idea-hat-comment>
+      </div>
+    </div>
+    <div class="button button-block button-royal">Post Comment</div>
+  </ion-content>
+</ion-view>

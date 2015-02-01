@@ -15,6 +15,10 @@ angular.module('idea-hat.ideas.controller', ['idea-hat.shared.f', 'idea-hat.shar
   // listen for changes in the ideas
   $f.ref().child("ideas").on("value", ideasCB);
 
+  $scope.goCategories = function() {
+    $state.go('app.categories');
+  };
+
   $scope.goIdea = function(idea) {
     $state.go('app.idea', {id: idea.$id});
   };
