@@ -17,6 +17,11 @@ angular.module('idea-hat.shared.category-factory',
         this[param] = self[param];
       }
       return true;
+    },
+    postIdea: function(idea) { // this method posts an idea to this category
+      var key = $f.ref().child("ideas").push(idea).key();
+      // put this idea in the category in the firebase
+      $f.ref().child("categories").child(this.$id).child("ideas").child(key).set("true");
     }
   });
 
