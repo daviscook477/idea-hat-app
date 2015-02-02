@@ -7,18 +7,18 @@ angular.module('idea-hat.shared.comment-factory',
   var CommentFactory = $FirebaseObject.$extendFactory({
     loadUser: function() {
       if (this.userD == null) {
-        this.userD = User(this.$id);
+        this.userD = User(this.owner);
       }
       return this.userD;
     },
     // this probably isn't needed because this is the default behavior
     $$updated: function(snapshot) {
       var self = snapshot.val(); // obtain the data that represents this idea
-      self.userD = this.userD;
       // set the properties of self into this
       for (param in self) {
         this[param] = self[param];
       }
+      this.userD = User(this.owner);
       return true;
     }
   });

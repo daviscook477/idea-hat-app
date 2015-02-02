@@ -24,15 +24,67 @@ angular.module('idea-hat.account.controller',
       signup: {
         email: null,
         password: null
+      },
+      edit: {
+        text: null
       }
     };
   };
   $scope.resetInput();
   $scope.modal = {
     login: null,
-    signup: null
+    signup: null,
+    edit: null
   };
 
+  $scope.defaults = {
+    login: {
+      email: "Email",
+      password: "Password"
+    },
+    signup: {
+      email: "Email",
+      password: "Password"
+    },
+    edit: {
+      text: null
+    }
+  };
+  $scope.props = {
+    screenName: {
+      placeholder: "Screen Name",
+      name: "screenName"
+    }
+  };
+
+  $scope.edit = function(prop) {
+    $scope.defaults.edit.text = $scope.props[prop].placeholder;
+    $scope.current = $scope.props[prop].name;
+    $scope.showEditModal();
+  };
+  $scope.showEditModal = function() {
+    $scope.modal.edit.show();
+  };
+  $scope.hideEditModal = function() {
+    $scope.modal.edit.hide();
+  };
+  $scope.finishEdit = function() {
+    if ($scope.current === "screenName") {
+      $scope.user.screenName = $scope.input.edit.text;
+      $scope.user.$save();
+      $scope.resetInput();
+    }
+    $scope.hideEditModal();
+  }
+
+  // create the modal for edits
+  $ionicModal.fromTemplateUrl('components/side-menu/shared/text-edit-modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up',
+    focusFirstInput: true
+  }).then(function(modal) {
+    $scope.modal.edit = modal;
+  });
   // create the modal for login
   $ionicModal.fromTemplateUrl('components/side-menu/shared/login-modal.html', {
     scope: $scope,

@@ -14,11 +14,12 @@ angular.module('idea-hat.shared.category-factory',
       for (param in self) {
         this[param] = self[param];
       }
+      this.userD = User(this.owner);
       return true;
     },
     loadUser: function() {
       if (this.userD == null) {
-        this.userD = User(this.$id);
+        this.userD = User(this.owner);
       }
       return this.userD;
     },

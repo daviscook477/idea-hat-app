@@ -26,7 +26,11 @@
 
     <!-- if logged in show the account settings -->
     <div ng-show="user != null">
-      <div class="item">Screen name: {{user.screenName}}</div> <!-- TODO: add a button for changing it -->
+      <div class="item item-icon-right">
+        Screen name: {{user.screenName}}
+        <i class="icon ion-gear-a"
+        ng-click="edit('screenName')"></i>
+      </div>
     </div>
   </ion-content>
 </ion-view>

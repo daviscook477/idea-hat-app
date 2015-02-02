@@ -11,10 +11,11 @@ angular.module('idea-hat.shared.idea-factory',
   var IdeaFactory = $FirebaseObject.$extendFactory({
     // this method tells the idea to load its user
     loadUser: function() {
-      if (this.userD == null) {
-        this.userD = User(this.$id);
+      if (this._shouldLoad == null) {
+        this._shouldLoad = {
+          user: true
+        };
       }
-      return this.userD;
     },
     postComment: function(comment) { // this method posts a comment to this idea
       var commentRef = mainRef.child("comments").push(comment)
@@ -33,7 +34,11 @@ angular.module('idea-hat.shared.idea-factory',
       // well it actually may need to preserve the values of commentsD and userD
       var self = snapshot.val();
       self.commentsD = this.commentsD;
-      self.userD = this.userD;
+      if (this._shouldLoad != null) { // TODO: change all of the factories to use this
+        if (this._shouldLoad.user) {
+          self.userD = User(self.owner);
+        }
+      }
       // set the properties of self into this
       for (param in self) {
         this[param] = self[param];

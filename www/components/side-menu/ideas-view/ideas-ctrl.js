@@ -11,6 +11,7 @@ angular.module('idea-hat.ideas.controller', ['idea-hat.shared.f', 'idea-hat.shar
     $timeout(function() {
       var data = snapshot.val();
       for (param in data) { // find each idea, param is the key for the idea
+        console.log(param + " " + data[param]);
         // we want to follow the user but we don't need to follow the comments
         $scope.ideas[param] = Idea(param); // at each key in $scope.ideas put an idea created from that key
         $scope.ideas[param].loadUser(); // load the user

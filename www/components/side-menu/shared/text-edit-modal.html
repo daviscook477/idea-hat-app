@@ -1,0 +1,14 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Edit Property: {{defaults.edit.text}}</h1>
+  </ion-header-bar>
+  <ion-content>
+    <div class="list">
+      <label class="item item-input">
+        <input type="text" ng-model="input.edit.text" placeholder="{{defaults.edit.text}}">
+      </label>
+    </div>
+    <div class="button button-block button-royal" ng-click="finishEdit()">Submit</div>
+    <div class="button button-block button-stable" ng-click="hideEditModal()">Cancel</div>
+  </ion-content>
+</ion-modal-view>

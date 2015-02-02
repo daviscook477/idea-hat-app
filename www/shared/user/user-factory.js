@@ -23,8 +23,8 @@ angular.module('idea-hat.shared.user-factory',
   });
 
   return function(id) {
-    if (id === null) {
-      return null;
+    if (id == null) {
+      return {screenName: "anonymous"}; // return a mock object
     }
     // obtain a reference to the firebase at this user
     var ref = $f.ref().child('users').child(id);
