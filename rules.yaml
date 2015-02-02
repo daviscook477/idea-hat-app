@@ -1,44 +1,6 @@
-functions:
-  - isLoggedIn(): auth.uid !== null
-
-schema:
-  type: object
-  additionalProperties: false
-  properties:
-    ideas:
-      type: object
-      $ideaid:
-        type: object
-        additionalProperties: false
-        properties:
-          title: {type: string}
-          description: {type: string}
-          owner: {type: string}
-    comments:
-      type: object
-      $commentid:
-        type: object
-        additionalProperties: false
-        properties:
-          text: {type: string}
-          owner: {type: string}
-    categories:
-      type: object
-      $categoryid:
-        type: object
-        additionalProperties: false
-        properties:
-          title: {type: string}
-          owner: {type: string}
-    users:
-      type: object
-      $userid:
-        type: object
-        additionalProperties: false
-        properties:
-          screenName: {type: string}
+schema: {}
 
 access:
   - location: /
-    read:  true
-    write: true && isLoggedIn()
+    read: true
+    write: true
