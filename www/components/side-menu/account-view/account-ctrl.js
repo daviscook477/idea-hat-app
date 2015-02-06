@@ -7,11 +7,19 @@ angular.module('idea-hat.account.controller',
   ['$scope', '$state', '$f', 'User', '$firebaseAuth', '$ionicPopup', '$ionicModal',
   function($scope, $state, $f, User, $firebaseAuth, $ionicPopup, $ionicModal) {
   // initialize the $scope with the idea
-  $scope.user = User($f.authID());
+  if ($f.authID() == null) {
+    $scope.user = null;
+  } else {
+    $scope.user = User($f.authID());
+  }
   $scope.auth = $firebaseAuth($f.ref());
   // list for changes in auth and update the user accordingly
   $scope.auth.$onAuth(function(authData) {
-    $scope.user = User($f.authID());
+    if ($f.authID() == null) {
+      $scope.user = null;
+    } else {
+      $scope.user = User($f.authID());
+    }
   });
 
   // intialize the input containers to empty

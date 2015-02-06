@@ -12,10 +12,9 @@ angular.module('idea-hat.shared.idea-factory',
     // this method tells the idea to load its user
     loadUser: function() {
       if (this._shouldLoad == null) {
-        this._shouldLoad = {
-          user: true
-        };
+        this._shouldLoad = {};
       }
+      this._shouldLoad.user = true;
     },
     postComment: function(comment) { // this method posts a comment to this idea
       var commentRef = mainRef.child("comments").push(comment)
@@ -23,20 +22,22 @@ angular.module('idea-hat.shared.idea-factory',
       mainRef.child("ideas").child(this.$id).child("comments").child(key).set("true");
     },
     // this method tells the idea to load its comments / provides the caller with the comments
-    loadComments: function(snapshot) {
-      if (this.commentsD == null) {
-        this.commentsD = CommentList(this.$id);
+    loadComments: function() {
+      if (this._shouldLoad == null) {
+        this._shouldLoad = {};
       }
-      return this.commentsD;
+      this._shouldLoad.comments = true;
     },
     // this method doesn't really need to be here (it just does the default behavior)
     $$updated:function(snapshot) {
       // well it actually may need to preserve the values of commentsD and userD
       var self = snapshot.val();
-      self.commentsD = this.commentsD;
       if (this._shouldLoad != null) { // TODO: change all of the factories to use this
         if (this._shouldLoad.user) {
           self.userD = User(self.owner);
+        }
+        if (this._shouldLoad.comments) {
+          self.commentsD = CommentList(self.$id);
         }
       }
       // set the properties of self into this
