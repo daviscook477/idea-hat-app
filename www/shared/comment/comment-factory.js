@@ -14,9 +14,9 @@ angular.module('idea-hat.shared.comment-factory',
     // this probably isn't needed because this is the default behavior
     $$updated: function(snapshot) {
       var self = snapshot.val(); // obtain the data that represents this idea
-      if (this._shouldLoad != null) { // TODO: change all of the factories to use this
+      if (this._shouldLoad != null) {
         if (this._shouldLoad.user) {
-          self.userD = User(self.owner);
+          self.userD = User(self.owner); // TODO: check for changes
         }
       }
       // set the properties of self into this
