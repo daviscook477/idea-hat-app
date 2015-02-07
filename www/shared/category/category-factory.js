@@ -1,8 +1,8 @@
 angular.module('idea-hat.shared.category-factory',
   ['firebase', 'idea-hat.shared.f', 'idea-hat.shared.idea-factory'])
 
-.factory("Category", ["$FirebaseObject", "$firebase", "$f", "IdeaList", "User",
-  function($FirebaseObject, $firebase, $f, IdeaList, User) {
+.factory("Category", ["$FirebaseObject", "$firebase", "$f", "$q", "IdeaList", "User",
+  function($FirebaseObject, $firebase, $f, $q, IdeaList, User) {
   var mainRef = $f.ref();
   // create a new factory based on $FirebaseObject
   var CategoryFactory = $FirebaseObject.$extendFactory({
@@ -18,25 +18,36 @@ angular.module('idea-hat.shared.category-factory',
       mainRef.child("categories").child(this.$id).child("ideas").child(key).set("true");
     },
     // this method tells the idea to load its ideas / provides the caller with the ideas
-    loadIdeas: function(snapshot) {
+    loadIdeas: function(snapshot) { // so this idea actually sucked
+      // I totally should be loading the ideas in this method and then just changing the ideas whenever the pointer changes in $$updated
+      console.log("load ideas");
+      var deffered = $q.defer();
       if (this._shouldLoad == null) {
         this._shouldLoad = {};
       }
       this._shouldLoad.ideas = true;
+      if (this._loadedObjects  == null) {
+        this._loadedObjects = {};
+      }
+      this._loadedObjects.ideas = deffered;
+      return deffered.promise;
     },
     // this method doesn't really need to be here (it just does the default behavior)
     $$updated:function(snapshot) {
       // well it actually may need to preserve the values of commentsD and userD
       var self = snapshot.val();
-      self.ideasD = this.ideasD;
       if (this._shouldLoad != null) {
         if (this._shouldLoad.user) {
           self.userD = User(self.owner); // TODO: check for changes
         }
         if (this._shouldLoad.ideas) {
+          console.log("loaded ideas");
           self.ideasD = IdeaList(self.$id);
+          this._loadedObjects.ideas.resolve(self.ideasD);
         }
       }
+      self._shouldLoad = this._shouldLoad;
+      self._loadedObjects = this._loadedObjects;
       // set the properties of self into this
       for (param in self) {
         this[param] = self[param];
