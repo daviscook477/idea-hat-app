@@ -6,9 +6,11 @@ angular.module('idea-hat.idea.controller',
   ['$scope', '$state', '$stateParams', '$f', 'Idea', '$ionicPopup', '$ionicModal',
   function($scope, $state, $stateParams, $f, Idea, $ionicPopup, $ionicModal) {
   // initialize the $scope with the idea
+  console.log("controller loaded");
   $scope.idea = Idea($stateParams.id);
   $scope.idea.$loaded().then(function(idea) { //when the idea loads tell it to
     // load its comments
+    console.log(idea);
     idea.loadComments().then(function(commentList) {
       commentList.on("comment", function(comment) { // set a callback for each comment
         comment.loadUser(); // make each comment load its user
