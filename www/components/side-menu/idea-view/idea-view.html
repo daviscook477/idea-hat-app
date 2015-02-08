@@ -1,7 +1,7 @@
-<ion-view view-title="Browsing Comments">
-  <ion-content  ng-controller="IdeaCtrl">
+<ion-view view-title="Browsing Comments" ng-controller="IdeaCtrl">
+  <ion-content>
     <div class="list">
-      <div class="item item-divider">Idea - {{idea.title}} - Posted by: {{idea.userD.screenName}}</div>
+      <div class="item item-divider">Idea: {{idea.title}} - Posted by: {{idea.userD.screenName}}</div>
       <div class="item item-text-wrap">{{idea.description}}</div> <!-- Not using idea directive because we want to display in differnet format -->
       <div class="item item-divider">Comments</div>
       <div ng-repeat="comment in idea.commentsD">
