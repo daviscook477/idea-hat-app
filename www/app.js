@@ -21,7 +21,7 @@ angular.module('idea-hat',
       StatusBar.styleDefault();
     }
   });
-  // load settings from the window
+  // load settings from the window - this is for auto login
   var rememberLogin = $window.localStorage['rememberLogin'];
   if (rememberLogin === "true") {
     rememberLogin = true;

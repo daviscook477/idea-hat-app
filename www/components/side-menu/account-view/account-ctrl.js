@@ -151,6 +151,10 @@ angular.module('idea-hat.account.controller',
     $scope.auth.$authWithPassword(user).then(function(authData) {
       $window.localStorage['login'] = JSON.stringify(user);
       console.log("stored login info: " + JSON.stringify(user));
+      $scope.input.login = { // when user is loggin sucessfully reset the form
+        email: null,
+        password: null
+      };
     });
     $scope.hideLoginModal();
   };
@@ -159,7 +163,12 @@ angular.module('idea-hat.account.controller',
       email: $scope.input.signup.email,
       password: $scope.input.signup.password
     }
-    $scope.auth.$createUser(user);
+    $scope.auth.$createUser(user).then(function() { // create the user
+      $scope.input.signup = { // when user is created sucessfully reset the form
+        email: null,
+        password: null
+      };
+    });
     $scope.hideSignupModal();
   };
 
