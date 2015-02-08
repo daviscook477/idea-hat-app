@@ -7,10 +7,12 @@ angular.module('idea-hat.shared.category-factory',
   // create a new factory based on $FirebaseObject
   var CategoryFactory = $FirebaseObject.$extendFactory({
     loadUser: function() {
-      if (this._shouldLoad == null) {
-        this._shouldLoad = {};
-      }
-      this._shouldLoad.user = true;
+      var deffered = $q.defer();
+      this.$loaded().then(function(self) {
+        self.userD = User(self.owner);
+        deffered.resolve(self.userD);
+      });
+      return deffered.promise;
     },
     postIdea: function(idea) { // this method posts an idea to this category
       var ideaRef = mainRef.child("ideas").push(idea)
@@ -19,35 +21,23 @@ angular.module('idea-hat.shared.category-factory',
     },
     // this method tells the idea to load its ideas / provides the caller with the ideas
     loadIdeas: function(snapshot) { // so this idea actually sucked
-      // I totally should be loading the ideas in this method and then just changing the ideas whenever the pointer changes in $$updated
-      console.log("load ideas");
       var deffered = $q.defer();
-      if (this._shouldLoad == null) {
-        this._shouldLoad = {};
-      }
-      this._shouldLoad.ideas = true;
-      if (this._loadedObjects  == null) {
-        this._loadedObjects = {};
-      }
-      this._loadedObjects.ideas = deffered;
+      this.$loaded().then(function(self) {
+        self.ideasD = IdeaList(self.$id);
+        deffered.resolve(self.ideasD);
+      });
       return deffered.promise;
     },
     // this method doesn't really need to be here (it just does the default behavior)
     $$updated:function(snapshot) {
       // well it actually may need to preserve the values of commentsD and userD
       var self = snapshot.val();
-      if (this._shouldLoad != null) {
-        if (this._shouldLoad.user) {
-          self.userD = User(self.owner); // TODO: check for changes
-        }
-        if (this._shouldLoad.ideas) {
-          console.log("loaded ideas");
-          self.ideasD = IdeaList(self.$id);
-          this._loadedObjects.ideas.resolve(self.ideasD);
-        }
+      if (this.userD != null) {
+        self.userD = this.userD;
       }
-      self._shouldLoad = this._shouldLoad;
-      self._loadedObjects = this._loadedObjects;
+      if (this.commentsD != null) {
+        self.commentsD = this.commentsD;
+      }
       // set the properties of self into this
       for (param in self) {
         this[param] = self[param];

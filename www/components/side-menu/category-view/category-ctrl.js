@@ -8,12 +8,9 @@ angular.module('idea-hat.category.controller',
   function($scope, $state, $stateParams, $f, Category, $ionicModal, $ionicPopup) {
   // initialize the $scope with a category object
   $scope.category = Category($stateParams.id); // we need to trace the ideas but we don't want to trace the user
-  console.log($scope.category);
   $scope.category.$loaded().then(function(category) { //when the idea loads tell it to
-    console.log("category loaded");
     // load its ideas
     category.loadIdeas().then(function(ideaList) {
-      console.log("idea list loaded: " + ideasList);
       ideaList.on("idea", function(idea) { // set a callback for each idea
         idea.loadUser(); // make each idea load its user
       });

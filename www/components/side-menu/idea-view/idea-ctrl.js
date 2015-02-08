@@ -9,8 +9,10 @@ angular.module('idea-hat.idea.controller',
   $scope.idea = Idea($stateParams.id);
   $scope.idea.$loaded().then(function(idea) { //when the idea loads tell it to
     // load its comments
-    idea.loadComments().on("comment", function(comment) { // set a callback for each comment
-      comment.loadUser(); // make each comment load its user
+    idea.loadComments().then(function(commentList) {
+      commentList.on("comment", function(comment) { // set a callback for each comment
+        comment.loadUser(); // make each comment load its user
+      });
     });
     // load its users
     idea.loadUser();

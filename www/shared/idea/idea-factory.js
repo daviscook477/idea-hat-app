@@ -4,17 +4,19 @@ angular.module('idea-hat.shared.idea-factory',
   'idea-hat.shared.user-factory',
   'idea-hat.shared.comment-factory'])
 
-.factory("Idea", ["$FirebaseObject", "$firebase", "$f", "User", "CommentList",
-  function($FirebaseObject, $firebase, $f, User, CommentList) {
+.factory("Idea", ["$FirebaseObject", "$firebase", "$f", "$q", "User", "CommentList",
+  function($FirebaseObject, $firebase, $f, $q, User, CommentList) {
   // create a new factory based on $FirebaseObject
   var mainRef = $f.ref();
   var IdeaFactory = $FirebaseObject.$extendFactory({
     // this method tells the idea to load its user
     loadUser: function() {
-      if (this._shouldLoad == null) {
-        this._shouldLoad = {};
-      }
-      this._shouldLoad.user = true;
+      var deffered = $q.defer();
+      this.$loaded().then(function(self) {
+        self.userD = User(self.owner);
+        deffered.resolve(self.userD);
+      });
+      return deffered.promise;
     },
     postComment: function(comment) { // this method posts a comment to this idea
       var commentRef = mainRef.child("comments").push(comment)
@@ -23,22 +25,22 @@ angular.module('idea-hat.shared.idea-factory',
     },
     // this method tells the idea to load its comments / provides the caller with the comments
     loadComments: function() {
-      if (this._shouldLoad == null) {
-        this._shouldLoad = {};
-      }
-      this._shouldLoad.comments = true;
+      var deffered = $q.defer();
+      this.$loaded().then(function(self) {
+        self.commentsD = CommentList(self.$id);
+        deffered.resolve(self.commentsD);
+      });
+      return deffered.promise;
     },
     // this method doesn't really need to be here (it just does the default behavior)
     $$updated:function(snapshot) {
       // well it actually may need to preserve the values of commentsD and userD
       var self = snapshot.val();
-      if (this._shouldLoad != null) { // TODO: change all of the factories to use this
-        if (this._shouldLoad.user) {
-          self.userD = User(self.owner);
-        }
-        if (this._shouldLoad.comments) {
-          self.commentsD = CommentList(self.$id);
-        }
+      if (this.userD != null) {
+        self.userD = this.userD;
+      }
+      if (this.commentsD != null) {
+        self.commentsD = this.commentsD;
       }
       // set the properties of self into this
       for (param in self) {
