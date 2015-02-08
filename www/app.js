@@ -6,9 +6,10 @@ angular.module('idea-hat',
   'idea-hat.categories',
   'idea-hat.idea',
   'idea-hat.account',
-  'idea-hat.profile'])
+  'idea-hat.profile',
+  'idea-hat.shared.f'])
 
-.run(function($ionicPlatform) {
+.run(['$ionicPlatform', '$f', '$window', function($ionicPlatform, $f, $window) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -20,7 +21,23 @@ angular.module('idea-hat',
       StatusBar.styleDefault();
     }
   });
-})
+  // load settings from the window
+  var rememberLogin = $window.localStorage['rememberLogin'];
+  if (rememberLogin === "true") {
+    rememberLogin = true;
+  }
+  if (rememberLogin === "false") {
+    rememberLogin = false;
+  }
+  if (rememberLogin) { // here we auto login the user or  invalidate their login if they don't want rememberd
+     var user = JSON.parse($window.localStorage['login']); // get the user
+     try {
+       $f.$login(user); // do the auto login
+     } catch(err) {}
+  } else {
+    $f.ref().unauth(); // they don't want to auto-login - make sure they are logged out
+  }
+}])
 
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider

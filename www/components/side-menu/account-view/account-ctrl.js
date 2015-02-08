@@ -4,8 +4,8 @@ angular.module('idea-hat.account.controller',
   'ionic'])
 
 .controller('AccountCtrl',
-  ['$scope', '$state', '$f', 'User', '$firebaseAuth', '$ionicPopup', '$ionicModal',
-  function($scope, $state, $f, User, $firebaseAuth, $ionicPopup, $ionicModal) {
+  ['$scope', '$state', '$f', 'User', '$firebaseAuth', '$ionicPopup', '$ionicModal', '$window',
+  function($scope, $state, $f, User, $firebaseAuth, $ionicPopup, $ionicModal, $window) {
   // initialize the $scope with the idea
   if ($f.authID() == null) {
     $scope.user = null;
@@ -65,6 +65,24 @@ angular.module('idea-hat.account.controller',
     }
   };
 
+  // load settings from the window
+  var rememberLogin = $window.localStorage['rememberLogin'];
+  if (rememberLogin === "true") {
+    rememberLogin = true;
+  }
+  if (rememberLogin === "false") {
+    rememberLogin = false;
+  }
+  $scope.input.rememberLogin = rememberLogin;
+
+  // watch for changes in remember login
+  $scope.$watch('input.rememberLogin', function(value) {
+    rememberLogin = value;
+    console.log("check button changed");
+    console.log("remember login: " + rememberLogin);
+    $window.localStorage['rememberLogin'] = value;
+  });
+
   $scope.edit = function(prop) {
     $scope.defaults.edit.text = $scope.props[prop].placeholder;
     $scope.current = $scope.props[prop].name;
@@ -123,15 +141,19 @@ angular.module('idea-hat.account.controller',
   };
   $scope.doLogout = function() {
     $scope.auth.$unauth();
-  }
+    $window.localStorage['login'] = null;
+  };
   $scope.doLogin = function() {
     var user = {
       email: $scope.input.login.email,
       password: $scope.input.login.password
-    }
-    $scope.auth.$authWithPassword(user);
+    };
+    $scope.auth.$authWithPassword(user).then(function(authData) {
+      $window.localStorage['login'] = JSON.stringify(user);
+      console.log("stored login info: " + JSON.stringify(user));
+    });
     $scope.hideLoginModal();
-  }
+  };
   $scope.doSignup = function() {
     var user = {
       email: $scope.input.signup.email,
@@ -139,7 +161,7 @@ angular.module('idea-hat.account.controller',
     }
     $scope.auth.$createUser(user);
     $scope.hideSignupModal();
-  }
+  };
 
   //TODO: implement modal functionality
 }]);
