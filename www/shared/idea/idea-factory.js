@@ -13,7 +13,6 @@ angular.module('idea-hat.shared.idea-factory',
     // this method tells the idea to load its user
     loadUser: function() {
       if (this._dependencies.User == null) {
-        console.log("getting user");
         this._dependencies.User = $injector.get('User'); // lazy dependency stuff
       }
       var deffered = $q.defer();
@@ -31,7 +30,6 @@ angular.module('idea-hat.shared.idea-factory',
     // this method tells the idea to load its comments / provides the caller with the comments
     loadComments: function() {
       if (this._dependencies.CommentList == null) {
-        console.log("getting comment list");
         this._dependencies.CommentList = $injector.get('CommentList'); // lazy dependency stuff
       }
       var deffered = $q.defer();

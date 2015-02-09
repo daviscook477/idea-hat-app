@@ -1,15 +1,19 @@
 angular.module('idea-hat.shared.category-factory',
   ['firebase', 'idea-hat.shared.f', 'idea-hat.shared.idea-factory'])
 
-.factory("Category", ["$FirebaseObject", "$firebase", "$f", "$q", "IdeaList", "User",
-  function($FirebaseObject, $firebase, $f, $q, IdeaList, User) {
+.factory("Category", ["$FirebaseObject", "$firebase", "$f", "$q", "$injector",
+  function($FirebaseObject, $firebase, $f, $q, $injector) {
   var mainRef = $f.ref();
   // create a new factory based on $FirebaseObject
   var CategoryFactory = $FirebaseObject.$extendFactory({
+    _dependencies: {},
     loadUser: function() {
+      if (this._dependencies.User == null) {
+        this._dependencies.User = $injector.get('User'); // lazy dependency stuff
+      }
       var deffered = $q.defer();
       this.$loaded().then(function(self) {
-        self.userD = User(self.owner);
+        self.userD = self._dependencies.User(self.owner);
         deffered.resolve(self.userD);
       });
       return deffered.promise;
@@ -20,10 +24,13 @@ angular.module('idea-hat.shared.category-factory',
       mainRef.child("categories").child(this.$id).child("ideas").child(key).set("true");
     },
     // this method tells the idea to load its ideas / provides the caller with the ideas
-    loadIdeas: function(snapshot) { // so this idea actually sucked
+    loadIdeas: function(snapshot) {
+      if (this._dependencies.IdeaList == null) {
+        this._dependencies.IdeaList = $injector.get('IdeaList'); // lazy dependency stuff
+      }
       var deffered = $q.defer();
       this.$loaded().then(function(self) {
-        self.ideasD = IdeaList(self.$id);
+        self.ideasD = self._dependencies.IdeaList(self.$id);
         deffered.resolve(self.ideasD);
       });
       return deffered.promise;
@@ -38,6 +45,7 @@ angular.module('idea-hat.shared.category-factory',
       if (this.commentsD != null) {
         self.commentsD = this.commentsD;
       }
+      self._dependencies = this._dependencies;
       // set the properties of self into this
       for (param in self) {
         this[param] = self[param];
