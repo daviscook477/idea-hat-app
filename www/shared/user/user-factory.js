@@ -3,9 +3,18 @@ angular.module('idea-hat.shared.user-factory',
 
 .factory("User", ["$FirebaseObject", "$firebase", "$f",
   function($FirebaseObject, $firebase, $f) {
+
   // create a new factory based on $FirebaseObject
   var UserFactory = $FirebaseObject.$extendFactory({
     // TODO: check if the thing actually changes in $$updated
+    loadComments: function() {
+      var deffered = $q.defer();
+      this.$loaded().then(function(self) {
+        self.commentsD = CommentList(self.$id);
+        deffered.resolve(self.commentsD);
+      });
+      return deffered.promise;
+    },
     $$updated: function(snapshot) {
       var self = snapshot.val();
       if (self == null) {

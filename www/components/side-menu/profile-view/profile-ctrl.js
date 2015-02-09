@@ -7,4 +7,6 @@ angular.module('idea-hat.profile.controller',
   function($scope, $state, $stateParams, $f, User) {
   // initialize the $scope with the idea
   $scope.user = User($stateParams.id);
+  //$scope.user.loadIdeas();
+  //$scope.user.loadComments();
 }]);

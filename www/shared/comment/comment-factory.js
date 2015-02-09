@@ -1,23 +1,24 @@
 angular.module('idea-hat.shared.comment-factory',
-  ['firebase', 'idea-hat.shared.f', 'idea-hat.shared.user-factory'])
+  ['firebase', 'idea-hat.shared.f'])
 
-.factory("Comment", ["$FirebaseObject", "$firebase", "$f", "User",
-  function($FirebaseObject, $firebase, $f, User) {
+.factory("Comment", ["$FirebaseObject", "$firebase", "$f", "$q", "$injector",
+  function($FirebaseObject, $firebase, $f, $q, $injector) {
+  var User = $injector.get("User");
   // create a new factory based on $FirebaseObject
   var CommentFactory = $FirebaseObject.$extendFactory({
     loadUser: function() {
-      if (this._shouldLoad == null) {
-        this._shouldLoad = {};
-      }
-      this._shouldLoad.user = true;
+      var deffered = $q.defer();
+      this.$loaded().then(function(self) {
+        self.userD = User(self.owner);
+        deffered.resolve(self.userD);
+      });
+      return deffered.promise;
     },
     // this probably isn't needed because this is the default behavior
     $$updated: function(snapshot) {
       var self = snapshot.val(); // obtain the data that represents this idea
-      if (this._shouldLoad != null) {
-        if (this._shouldLoad.user) {
-          self.userD = User(self.owner); // TODO: check for changes
-        }
+      if (this.userD != null) {
+        self.userD = this.userD;
       }
       // set the properties of self into this
       for (param in self) {

@@ -1,17 +1,25 @@
-<ion-view view-title="Browsing Comments: {{idea.title}}" ng-controller="IdeaCtrl">
+<ion-view view-title="Browsing Profile" ng-controller="ProfileCtrl">
   <ion-content>
     <div class="list">
-      <div class="item item-divider">Idea</div>
-      <idea-hat-idea idea="idea">
+      <div class="item item-divider">
+        {{user.screenName}}
+      </div>
+      <div class="list list-inset">
+        <div class="item item-button-right">
+          Ideas
+          <button class="button button-positive">
+            <i class="icon ion-plus-circled"></i>
+          </button>
+        </div>
+        <span ng-repeat="idea in user.ideasD">
+          <idea-hat-idea idea="idea">
 
-      </idea-hat-idea>
-      <div class="item item-divider">Comments</div>
-      <div ng-repeat="comment in idea.commentsD">
-        <idea-hat-comment comment="comment">
-
-        </idea-hat-comment>
+          </idea-hat-idea>
+        </span>
+      </div>
+      <div class="list list-inset">
+        <div class="item item-divider">Comments</div>
       </div>
     </div>
-    <div class="button button-block button-royal" ng-click="showCommentModal()">Post Comment</div>
   </ion-content>
 </ion-view>

@@ -1,7 +1,11 @@
 angular.module('idea-hat.shared.idea-directive', [])
 
-.directive('ideaHatIdea', [function() {
+.directive('ideaHatIdea', ['$state', function($state) {
   var link = function($scope, element, attrs) {
+    $scope.goProfile = function() {
+      console.log("going to profile");
+      $state.go('app.profile', {id: $scope.idea.userD.$id});
+    };
     // watch for when this directive is destroyed
     $scope.$on("destroy", function() {
 
